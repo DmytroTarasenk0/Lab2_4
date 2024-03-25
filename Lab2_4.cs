@@ -1,7 +1,8 @@
 ﻿/// 1. Класи Піаніно, Клавіша, Педаль. Методи: налаштувати, грати на піаніно, натискати клавішу. 
 /// При виклику будь-якого методу класу, виводити на екран текстове повідомлення. 
 /// Оверрайднути базові методи Equals, GetHashCode, ToString.
-/// 2. 
+/// 2. Створити таксопарк. Вартість автопарку, сортування по витраті палива. Знайти автомобіль з заданою швидкістю.
+
 
 
 
@@ -108,7 +109,7 @@ namespace Lab2_4
 
         public void Play()
         {
-            Console.WriteLine("Playing melody.");
+            Console.WriteLine("Playing the melody.");
             push_the_pedal(); 
             press_the_key(); 
             press_the_key();
@@ -152,6 +153,68 @@ namespace Lab2_4
         }
     }
 
+    public class Car
+    {
+        public string Model {get; set;}
+        public double Consumption {get; set;}
+        public decimal Price {get; set;}
+        public int MaxSpeed {get; set;}
+
+        public Car(string m, double c, decimal p, int mS)
+        {
+            Model = m;
+            Consumption = c;
+            Price = p;
+            MaxSpeed = mS;
+        }
+
+        public void Info()
+        {
+            Console.WriteLine($"Model: {Model}, " +
+                $"\nFuel Consumption: {Consumption} L/100km, " +
+                $"\nPrice: {Price}$, " +
+                $"\nMax Speed: {MaxSpeed} km/h\n");
+        }
+    }
+    
+    public class Car_Park
+    {
+        private List<Car> park;
+
+        public Car_Park()
+        {
+            park = new List<Car>();
+        }
+        public void AddCar(Car car)
+        {
+            park.Add(car);
+        }
+        public void RemoveCar(Car car)
+        {
+            park.Remove(car);
+        }
+        public decimal TotalPrice()
+        {
+            return park.Sum(c => c.Price);
+        }
+        public void SortConsumption()
+        {
+            park.Sort((car1, car2) => car1.Consumption.CompareTo(car2.Consumption));
+        }
+        public Car FindSpeed(int maxSpeed)
+        {
+            Car possible_car = park.FirstOrDefault(c => c.MaxSpeed == maxSpeed);
+            return possible_car;
+        }
+        public void DisplayCars()
+        {
+            foreach (var car in park)
+            {
+                car.Info();
+            }
+        }
+    }
+
     class Program
     {
         static void Main(string[] args)
@@ -179,6 +242,8 @@ namespace Lab2_4
                         Piano_pedal pedal1 = new Piano_pedal();
                         Piano_pedal pedal2 = new Piano_pedal();
 
+                        piano1.Play();
+                        piano2.Setup();
                     }
                     catch (Exception e)
                     {
@@ -189,7 +254,28 @@ namespace Lab2_4
                 {
                     try
                     {
+                        Car_Park park = new Car_Park();
+                        park.AddCar(new Car("Ferrari", 15.5, 300000, 340));
+                        park.AddCar(new Car("Mercedes", 9.5, 100000, 270));
+                        park.AddCar(new Car("Porsche", 11.8, 120000, 310));
 
+                        park.DisplayCars();
+
+                        park.SortConsumption();
+                        park.DisplayCars();
+
+                        Car foundCar = park.FindSpeed(310);
+                        if (foundCar != null)
+                        {
+                            Console.WriteLine($"\nCar found with max speed 310:");
+                            foundCar.Info();
+                        }
+                        else
+                        {
+                            Console.WriteLine($"\nCar with max speed 310 not found");
+                        }
+
+                        Console.WriteLine("Total Price: " + park.TotalPrice());
                     }
                     catch (Exception e)
                     {
