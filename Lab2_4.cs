@@ -236,6 +236,16 @@ namespace Lab2_4
             Car possible_car = park.FirstOrDefault(c => c.MaxSpeed == maxSpeed);
             return possible_car;
         }
+        public List<PassengerCar> FindSeats(int seats)
+        {
+            List<PassengerCar> foundCars = park.OfType<PassengerCar>().Where(c => c.Seats == seats).ToList();
+            return foundCars;
+        }
+        public List<CargoCar> FindCargo(double loadCapacity)
+        {
+            List<CargoCar> foundCars = park.OfType<CargoCar>().Where(c => c.LoadCapacity == loadCapacity).ToList();
+            return foundCars;
+        }
         public void DisplayCars()
         {
             foreach (var car in park)
@@ -313,6 +323,19 @@ namespace Lab2_4
                         {
                             Console.WriteLine($"No Car Found with Max Speed {speedToFind}");
                         }
+
+                        List<CargoCar> foundCcars = park.FindCargo(1500);
+                        foreach (var car in foundCcars)
+                        {
+                            car.Info();
+                        }
+
+                        List<PassengerCar> foundPcars = park.FindSeats(5);
+                        foreach (var car in foundPcars)
+                        {
+                            car.Info();
+                        }
+
 
                     }
                     catch (Exception e)
