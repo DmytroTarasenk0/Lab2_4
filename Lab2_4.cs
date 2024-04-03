@@ -168,15 +168,45 @@ namespace Lab2_4
             MaxSpeed = mS;
         }
 
-        public void Info()
+        public virtual void Info()
         {
             Console.WriteLine($"Model: {Model}, " +
                 $"\nFuel Consumption: {Consumption} L/100km, " +
                 $"\nPrice: {Price}$, " +
-                $"\nMax Speed: {MaxSpeed} km/h\n");
+                $"\nMax Speed: {MaxSpeed} km/h");
         }
     }
-    
+    public class PassengerCar : Car
+    {
+        public int Seats { get; set; }
+
+        public PassengerCar(string m, double c, decimal p, int mS, int seats) : base(m, c, p, mS)
+        {
+            Seats = seats;
+        }
+
+        public override void Info()
+        {
+            base.Info();
+            Console.WriteLine($"Number of Seats: {Seats}\n");
+        }
+    }
+    public class CargoCar : Car
+    {
+        public double LoadCapacity { get; set; }
+
+        public CargoCar(string m, double c, decimal p, int mS, double lC) : base(m, c, p, mS)
+        {
+            LoadCapacity = lC;
+        }
+
+        public override void Info()
+        {
+            base.Info();
+            Console.WriteLine($"Load Capacity: {LoadCapacity} kg\n");
+        }
+    }
+
     public class Car_Park
     {
         private List<Car> park;
@@ -255,27 +285,35 @@ namespace Lab2_4
                     try
                     {
                         Car_Park park = new Car_Park();
-                        park.AddCar(new Car("Ferrari", 15.5, 300000, 340));
-                        park.AddCar(new Car("Mercedes", 9.5, 100000, 270));
-                        park.AddCar(new Car("Porsche", 11.8, 120000, 310));
+
+                        PassengerCar car1 = new PassengerCar("Ford Focus", 8.5, 25000, 250, 5);
+                        PassengerCar car2 = new PassengerCar("Volkswagen Multivan Highline", 11.3, 32000, 230, 8);
+                        park.AddCar(car1);
+                        park.AddCar(car2);
+
+                        CargoCar car3 = new CargoCar("MAN TGS 33.360", 15.0, 38800, 180, 1500);
+                        CargoCar car4 = new CargoCar("Volvo FH Aero", 14.2, 42000, 200, 1800);
+                        park.AddCar(car3);
+                        park.AddCar(car4);
 
                         park.DisplayCars();
+                        Console.WriteLine($"Total Price of Cars in the Park: {park.TotalPrice()}$\n");
 
                         park.SortConsumption();
                         park.DisplayCars();
 
-                        Car foundCar = park.FindSpeed(310);
+                        int speedToFind = 180;
+                        Car foundCar = park.FindSpeed(speedToFind);
                         if (foundCar != null)
                         {
-                            Console.WriteLine($"\nCar found with max speed 310:");
+                            Console.WriteLine($"Found Car with Max Speed {speedToFind}:");
                             foundCar.Info();
                         }
                         else
                         {
-                            Console.WriteLine($"\nCar with max speed 310 not found");
+                            Console.WriteLine($"No Car Found with Max Speed {speedToFind}");
                         }
 
-                        Console.WriteLine("Total Price: " + park.TotalPrice());
                     }
                     catch (Exception e)
                     {
